@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    {% if article %}
+    <p>{{article.article_name}}</p>
+    <p>{{article.article_text}}</p>
+    <p>{{article.article_date}}</p>
+    {% else %}
+    <p>No such article with id </p>
+    {%endif%}
+  </body>
+</html>

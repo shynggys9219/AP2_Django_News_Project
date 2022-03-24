@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    {% if latest_articles %}
+    <ul>
+      {% for article in latest_articles %}
+      <li><a href="{% url 'newsapp:get_article_by_id' article.id %}">{{article.article_name}}</a></li>
+      {% endfor %}
+    </ul>
+    {%else%}
+    <h3>NO CONTEXT HERE</h3>
+    {%endif%}
+  </body>
+</html>
