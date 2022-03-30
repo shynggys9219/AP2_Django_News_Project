@@ -1,5 +1,8 @@
 from django.contrib import admin
 from newsapp.models import *
-# Register your models here.
+
+# display Editor model for manipulations in admin panel
 admin.site.register(Editor)
+
+# display Article model for manipulations in admin panel
 admin.site.register(Article)
