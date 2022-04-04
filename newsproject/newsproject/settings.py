@@ -27,6 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Custom user 
+AUTH_USER_MODEL = 'newsapp.CustomUser'
+LOGIN_REDIRECT_URL = "newsapp:index"
+LOGOUT_REDIRECT_URL = "newsapp:index"
+
 
 # Application definition
 
@@ -106,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Almaty'
 
 USE_I18N = True
 
@@ -119,3 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Media files urls to be accessed or saved
+MEDIA_ROOT = BASE_DIR/"newsapp/media"
+MEDIA_URL = '/media/'

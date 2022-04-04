@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from django.contrib.auth.views import auth_login
 
 # app name to use in pairs with urls in templates
 app_name = 'newsapp'
@@ -14,9 +15,15 @@ urlpatterns = [
     path('articles/article/<int:id>', get_article_by_id, name='get_article_by_id'),
 
     # searching specific word or pattern of text in article_text column
-    path('articles/search/<str:text>', search_article_by_text,
-         name='search_article_by_text'),
+    path('articles/search/', search_article_by_text, name='search_article_by_text'),
 
     # getting all articles in ASC order by date
     path('articles/archive/', archive, name='archive'),
+
+    # AUTH PART
+    # localhost:8000/login
+    path('', auth_login, name="login"),
+
+    # localhost:8000/register
+    path("register/", registerView.as_view(), name="registration"),
 ]

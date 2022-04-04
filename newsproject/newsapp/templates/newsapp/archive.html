@@ -1,0 +1,15 @@
+{% extends 'newsapp/layout.html'%}
+{% load static %}
+{% block page_title %} Arhive Page {%endblock%}
+
+{%block main_content%}
+    {% if archive_articles %}
+    {% for art in archive_articles %}
+    <ul>
+        <li><a href="{% url 'newsapp:get_article_by_id' art.id %}"> {{art.article_name}}</a></li>
+    </ul>
+    {%endfor%}
+    {% else %}
+    <h2> NO ARCHIVE ARTICLES </h2>
+    {%endif%}
+{% endblock %}

@@ -6,3 +6,6 @@ admin.site.register(Editor)
 
 # display Article model for manipulations in admin panel
 admin.site.register(Article)
+
+# display CustomUser model
+admin.site.register(CustomUser)
