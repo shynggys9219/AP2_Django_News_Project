@@ -1,19 +1,24 @@
 {% extends "newsapp/layout.html"%}
-
-{% block main_content %}
-  {% if search_res %}
-  <br>
+{%block page_title%} Search Results {%endblock%}
+{% block top_news %}
+<div class="top-news">
+  <div class="container">
+      
+      
     {% for article in search_res%}
+    <div class="row">
       <ol>
         <li value="{{forloop.counter}}">
-          <a href="{% url 'news:get_article_by_id' article.id %}">
-          <p>{{article.article_heading}}</p>
+          <a href="{% url 'newsapp:get_article_by_id' article.id %}">
+          {{article.article_name}}
         </a>
-        {{article.article_text|truncatewords:10}}
         </li>
       </ol>
-      {%endfor%}
-    {% else %}
+  </div>
+      {% empty %}
       {{empty_res}}
-    {% endif %}
+      {%endfor%}
+ 
+  </div>
+</div>
 {% endblock%}

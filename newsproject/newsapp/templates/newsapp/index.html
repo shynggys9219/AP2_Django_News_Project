@@ -1,25 +1,27 @@
 {% extends "newsapp/layout.html" %}
 {% load static %}
-
+{% block page_title%} AITU News {%endblock%}
 {% block main_content%}
 <!-- Top News Start-->
 {% block top_news %}
 <div class="top-news">
     <div class="container">
+        
         <div class="row">
           {% block top_with_container %}
 
           <div class="col-md-6 tn-left">
+            <h2>Latest Articles</h2>
             <div class="row tn-slider">
               
               {% if latest_articles %}
                 {% for article in latest_articles %}
-                  {% if forloop.counter < 4%}
+                  {% if forloop.counter < 11%}
                 <div class="col-md-6">
                     <div class="tn-img">
-                        <img src="{% static 'newsapp/img/news-450x350-1.jpg' %}" />
+                        <img src="{% static 'newsapp/img/latest_news.jpg' %}" height="344"/>
                         <div class="tn-title">
-                            <a href="{% url 'newsapp:get_article_by_id' article.id %}">{{article.article_name|truncatewords:2}}</a>
+                            <a href="{% url 'newsapp:get_article_by_id' article.id %}">{{article.article_name|truncatewords:4}}</a>
                         </div>                     
                     </div>
                     
@@ -37,39 +39,27 @@
           
           {% endblock %}
             <div class="col-md-6 tn-right">
+                <h2>Popular Articles</h2>
                 <div class="row">
+                    {% if popular_articles %}
+                {% for article in popular_articles %}
+                  {% if forloop.counter < 5%}
                     <div class="col-md-6">
                         <div class="tn-img">
-                            <img src="img/news-350x223-1.jpg" />
+                            <img src="{% static 'newsapp/img/popular_news.png' %}"  height="172"/>
                             <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
+                                <a href="{%url 'newsapp:get_article_by_id' article.id %}">{{article.article_name}}</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="tn-img">
-                            <img src="img/news-350x223-2.jpg" />
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
+                    {%endif%}
+                {% endfor %}
+                {%else%}
+                      <img src="{% static 'newsapp/img/news-450x350-1.jpg' %}" />
+                        <div class="tn-title">
+                            <a href="">No Context Here</a>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="tn-img">
-                            <img src="img/news-350x223-3.jpg" />
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="tn-img">
-                            <img src="img/news-350x223-4.jpg" />
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
+                      {%endif%}
                 </div>
             </div>
         </div>
@@ -83,60 +73,34 @@
 <div class="cat-news">
   {% block news_by_categories %}
     <div class="container">
+        <h2>News by Categories</h2>
+
         <div class="row">
           
             {% if categories %}
             {%for cat in categories%}
-            {% for article in latest_articles%}
-            {% if forloop.counter < 3 %}
+            
             <div class="col-md-6">
-                <h2>{{cat.article_category}}</h2>
+                <h2>{{cat.article_category|title}}</h2>
                 <div class="row cn-slider">
+                    {% for article in latest_articles%}
+                    {% if forloop.counter < 4 %}
                     <div class="col-md-6">
                         <div class="cn-img">
-                            <img src="{% static 'newsapp/img/news-350x223-3.jpg' %}" />
+                            <img src="{% static 'newsapp/img/news-main-page.jpg' %}" />
                             <div class="cn-title">
                                 <a href="{% url 'newsapp:get_article_by_id' article.id%}">{{article.article_name}}</a>
                             </div>
                         </div>
                     </div>
+                    {%endif%}
+            {%endfor%}
                 </div>
                 
             </div>
-            {%endif%}
-            {%endfor%}
-            {%endfor%}
-            {%endif%}
-            <div class="col-md-6">
-                <h2>Technology</h2>
-                <div class="row cn-slider">
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-4.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-5.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-1.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             
+            {%endfor%}
+            {%endif%}            
         </div>
     </div>
     {% endblock %}
@@ -144,168 +108,54 @@
 <!-- Category News End-->
 
 
-<!-- Category News Start-->
-<div class="cat-news">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Business</h2>
-                <div class="row cn-slider">
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-5.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-4.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-3.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <h2>Entertainment</h2>
-                <div class="row cn-slider">
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-2.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-1.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="cn-img">
-                            <img src="img/news-350x223-3.jpg" />
-                            <div class="cn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Category News End-->
-
 <!-- Tab News Start-->
 <div class="tab-news">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <ul class="nav nav-pills nav-justified">
+                    
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="pill" href="#featured">Featured News</a>
+                        <a class="nav-link " data-toggle="pill" href="#popular">Popular News</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#popular">Popular News</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#latest">Latest News</a>
+                        <a class="nav-link active" data-toggle="pill" href="#latest">Latest News</a>
                     </li>
                 </ul>
 
                 <div class="tab-content">
-                    <div id="featured" class="container tab-pane active">
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-1.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-2.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-3.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                    </div>
                     <div id="popular" class="container tab-pane fade">
+                        {%if popular_articles%}
+                        {%for article in popular_articles%}
+                        {% if forloop.counter < 4 %}
                         <div class="tn-news">
                             <div class="tn-img">
-                                <img src="img/news-350x223-4.jpg" />
+                                <img src="{% static 'newsapp/img/popular_news.png' %}" />
                             </div>
                             <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
+                                <a href="{%url 'newsapp:get_article_by_id' article.id%}">{{article.article_name|truncatewords:3}}</a>
                             </div>
                         </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-5.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-1.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
+                        {%endif%}
+                        {%endfor%}
+                        {%endif%}
+                        
                     </div>
                     <div id="latest" class="container tab-pane fade">
+                        {%if latest_articles%}
+                        {%for article in latest_articles%}
+                        {% if forloop.counter < 4 %}
                         <div class="tn-news">
                             <div class="tn-img">
-                                <img src="img/news-350x223-2.jpg" />
+                                <img src="{% static 'newsapp/img/latest_news.jpg' %}" />
                             </div>
                             <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
+                                <a href="{%url 'newsapp:get_article_by_id' article.id%}">{{article.article_name|truncatewords:3}}</a>
                             </div>
                         </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-3.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-4.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
+                        {%endif%}
+                        {%endfor%}
+                        {%endif%}
                     </div>
                 </div>
             </div>
@@ -313,10 +163,7 @@
             <div class="col-md-6">
                 <ul class="nav nav-pills nav-justified">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="pill" href="#m-viewed">Most Viewed</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#m-read">Most Read</a>
+                        <a class="nav-link active" data-toggle="pill" href="#m-read">Most Read</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href="#m-recent">Most Recent</a>
@@ -324,83 +171,37 @@
                 </ul>
 
                 <div class="tab-content">
-                    <div id="m-viewed" class="container tab-pane active">
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-5.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-4.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-3.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                    </div>
                     <div id="m-read" class="container tab-pane fade">
+                        {%if popular_articles%}
+                        {%for article in popular_articles%}
+                        {% if forloop.counter < 4 %}
                         <div class="tn-news">
                             <div class="tn-img">
-                                <img src="img/news-350x223-2.jpg" />
+                                <img src="{% static 'newsapp/img/popular_news.png' %}" />
                             </div>
                             <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
+                                <a href="{%url 'newsapp:get_article_by_id' article.id%}">{{article.article_name|truncatewords:3}}</a>
                             </div>
                         </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-1.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-3.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
+                        {%endif%}
+                        {%endfor%}
+                        {%endif%}
                     </div>
                     <div id="m-recent" class="container tab-pane fade">
+                        {%if latest_articles%}
+                        {%for article in latest_articles%}
+                        {% if forloop.counter < 4 %}
                         <div class="tn-news">
                             <div class="tn-img">
-                                <img src="img/news-350x223-4.jpg" />
+                                <img src="{% static 'newsapp/img/latest_news.jpg' %}" />
                             </div>
                             <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
+                                <a href="{%url 'newsapp:get_article_by_id' article.id%}">{{article.article_name|truncatewords:3}}</a>
                             </div>
                         </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-5.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
-                        <div class="tn-news">
-                            <div class="tn-img">
-                                <img src="img/news-350x223-1.jpg" />
-                            </div>
-                            <div class="tn-title">
-                                <a href="">Lorem ipsum dolor sit amet</a>
-                            </div>
-                        </div>
+                        {%endif%}
+                        {%endfor%}
+                        {%endif%}
                     </div>
                 </div>
             </div>
@@ -415,78 +216,20 @@
         <div class="row">
             <div class="col-lg-9">
                 <div class="row">
+                    {%if latest_articles%}
+                    {%for article in latest_articles%}
+                    {% if forloop.counter < 10 %}
                     <div class="col-md-4">
                         <div class="mn-img">
-                            <img src="img/news-350x223-1.jpg" />
+                            <img src="{% static 'newsapp/img/news-main-page.jpg' %}" />
                             <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
+                                <a href="{%url 'newsapp:get_article_by_id' article.id%}">{{article.article_name|truncatewords:3}}</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-2.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-3.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-4.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-5.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-1.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-2.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-3.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="mn-img">
-                            <img src="img/news-350x223-4.jpg" />
-                            <div class="mn-title">
-                                <a href="">Lorem ipsum dolor sit</a>
-                            </div>
-                        </div>
-                    </div>
+                    {%endif%}
+                    {%endfor%}
+                    {%endif%}
                 </div>
             </div>
 
@@ -494,16 +237,13 @@
                 <div class="mn-list">
                     <h2>Read More</h2>
                     <ul>
-                        <li><a href="">Lorem ipsum dolor sit amet</a></li>
-                        <li><a href="">Pellentesque tincidunt enim libero</a></li>
-                        <li><a href="">Morbi id finibus diam vel pretium enim</a></li>
-                        <li><a href="">Duis semper sapien in eros euismod sodales</a></li>
-                        <li><a href="">Vestibulum cursus lorem nibh</a></li>
-                        <li><a href="">Morbi ullamcorper vulputate metus non eleifend</a></li>
-                        <li><a href="">Etiam vitae elit felis sit amet</a></li>
-                        <li><a href="">Nullam congue massa vitae quam</a></li>
-                        <li><a href="">Proin sed ante rutrum</a></li>
-                        <li><a href="">Curabitur vel lectus</a></li>
+                    {%if latest_articles%}
+                    {%for article in latest_articles%}
+                    {% if forloop.counter < 11 %}
+                        <li><a href="{%url 'newsapp:get_article_by_id' article.id%}">{{article.article_name|truncatewords:3}}</a></li>
+                    {%endif%}
+                    {%endfor%}
+                    {%endif%}
                     </ul>
                 </div>
             </div>

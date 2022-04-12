@@ -94,17 +94,17 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
                             <a href="{% url 'newsapp:index' %}" class="nav-item nav-link active">Home</a>
-                            <div class="nav-item dropdown">
+                            <!-- <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dropdown</a>
                                 <div class="dropdown-menu">
                                     <a href="#" class="dropdown-item">Sub Item 1</a>
                                     <a href="#" class="dropdown-item">Sub Item 2</a>
                                 </div>
-                            </div>
-                            <a href="single-page.html" class="nav-item nav-link">Contacts</a>
-                            <a href="{% url 'newsapp:archive' %}" class="nav-item nav-link">See Old Articles</a>
+                            </div> -->
+                            <a href="{% url 'newsapp:contacts' %}" class="nav-item nav-link">Contacts</a>
+                            <a href="{% url 'newsapp:archive' %}" class="nav-item nav-link">Archive</a>
                             {% if user.is_authenticated %}
-                            <a href="" class="nav-item nav-link">{{user.username}}</a>
+                            <a href="{% url 'newsapp:profile' %}" class="nav-item nav-link">{{user.username}}</a>
                             <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                             {% else %}
                             <a href="{% url 'login' %}" class="nav-item nav-link">Sign In</a>
@@ -150,9 +150,9 @@
                         <div class="footer-widget">
                             <h3 class="title">Get in Touch</h3>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>123 News Street, NY, USA</p>
-                                <p><i class="fa fa-envelope"></i>info@example.com</p>
-                                <p><i class="fa fa-phone"></i>+123-456-7890</p>
+                                <p><i class="fa fa-map-marker"></i>Astana IT University</p>
+                                <p><i class="fa fa-envelope"></i>info@astanait.edu.kz</p>
+                                <p><i class="fa fa-phone"></i>I do not remember the phone number</p>
                                 <div class="social">
                                     <a href=""><i class="fab fa-twitter"></i></a>
                                     <a href=""><i class="fab fa-facebook-f"></i></a>
@@ -229,7 +229,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 copyright">
-                        <p>Copyright &copy; <a href="https://htmlcodex.com">HTML Codex</a>. All Rights Reserved</p>
+                        <p>Copyright &copy; <a href="">Some Company Name</a>. All Rights Reserved</p>
                     </div>
 
                     <div class="col-md-6 template-by">

@@ -9,16 +9,29 @@ app_name = 'newsapp'
 # structure is path(string_url, view_name, name=url_name)
 urlpatterns = [
     # index (main) page
-    path('', index, name='index'),
+    path('', IndexView.as_view(), name='index'),
 
     # getting specific article by this url
-    path('articles/article/<int:id>', get_article_by_id, name='get_article_by_id'),
+    path('articles/article/<int:pk>/', ArticleDetailView.as_view(), name='get_article_by_id'),
 
-    # searching specific word or pattern of text in article_text column
-    path('articles/search/', search_article_by_text, name='search_article_by_text'),
+    # searching specific word or pattern of text Article table
+    path('articles/search/', SearchView.as_view(), name='search_article_by_text'),
+
+    #if search is successful, we redirect the user to the next page
+    path('articles/search/<str:text>', SearchSuccessView.as_view(), name='search_success'),
 
     # getting all articles in ASC order by date
-    path('articles/archive/', archive, name='archive'),
+    path('articles/archive/', ArchiveView.as_view(), name='archive'),
+
+    # contacts page url
+    path('contacts/', ContactsView.as_view(), name='contacts'),
+
+    # profile page url
+    path('profile/', ProfileView.as_view(), name='profile'),
+
+    # profile changing page url
+    path('profile/change/', ProfileChangeView.as_view(), name='profile_change'),
+
 
     # AUTH PART
     # localhost:8000/login

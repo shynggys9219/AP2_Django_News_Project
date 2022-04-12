@@ -1,13 +1,49 @@
 {% extends "newsapp/layout.html"%}
 
-{%block main_content%}
-  <br>
-   <h2>Sign up</h2>
-   <form method="post" enctype="multipart/form-data">
-     {% csrf_token %}
-     {{ form.as_p}}
-     <button type="submit">Sign up</button>
-   </form>
 
-   <br><br>
-{% endblock %}
+{%block main_content%}
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{%url 'newsapp:index'%}">Home</a></li>
+            <li class="breadcrumb-item active">Registration</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Contact Start -->
+<div class="contact">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="contact-form">
+                  <h3>Registration Form</h3>
+                    <form method="post">
+                      {% csrf_token %}
+                        <div class="form-row">
+                          <table class="form-group col-md-6">
+                          {%for field in form %}
+                            <div class="form-group col-md-6">
+                                <tr>
+                                  <td>{{field.label}} </td>
+                                  <td> {{field}}</td>
+                                </tr>
+                                <tr></tr>
+                            </div>
+                            {%endfor%}
+                          </table>
+                        </div>
+                        <div>
+                          <!-- <a href=""></a> -->
+                          <button class="btn" type="submit">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->
+{%endblock%}
