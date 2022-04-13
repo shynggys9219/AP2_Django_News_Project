@@ -9,3 +9,6 @@ admin.site.register(Article)
 
 # display CustomUser model
 admin.site.register(CustomUser)
+
+# display Comment model
+admin.site.register(Comment)

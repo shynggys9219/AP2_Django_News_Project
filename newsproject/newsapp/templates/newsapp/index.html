@@ -141,7 +141,7 @@
                         {%endif%}
                         
                     </div>
-                    <div id="latest" class="container tab-pane fade">
+                    <div id="latest" class="container tab-pane active">
                         {%if latest_articles%}
                         {%for article in latest_articles%}
                         {% if forloop.counter < 4 %}
@@ -171,7 +171,7 @@
                 </ul>
 
                 <div class="tab-content">
-                    <div id="m-read" class="container tab-pane fade">
+                    <div id="m-read" class="container tab-pane active">
                         {%if popular_articles%}
                         {%for article in popular_articles%}
                         {% if forloop.counter < 4 %}

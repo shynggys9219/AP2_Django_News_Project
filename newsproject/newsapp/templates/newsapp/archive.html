@@ -6,16 +6,32 @@
 <div class="top-news">
     <div class="container">
     {% if archive_articles %}
-    {% for art in archive_articles %}
+    {% for art in page_obj %}
+    
     <div class="row">
     <ol start="{{forloop.counter}}">
         <li><a href="{% url 'newsapp:get_article_by_id' art.id %}"> {{art.article_name}}</a></li>
     </ol>
     </div>
     {%endfor%}
+
     {% else %}
     <h2> NO ARCHIVE ARTICLES </h2>
     {%endif%}
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <b><a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a></b>
+        {% endif %}
+
+        <span class="current">
+            <i> {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</i>
+        </span>
+
+        {% if page_obj.has_next %}
+            <b> <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></b>
+        {% endif %}
 </div>
 </div>
 {% endblock %}

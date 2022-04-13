@@ -30,6 +30,7 @@ class IndexView(ListView):
 class ArticleDetailView(DetailView):
     model = Article
     template_name = "newsapp/article.html"
+    form_class = CommentForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,12 +38,15 @@ class ArticleDetailView(DetailView):
         context['popular_articles'] = Article.objects.filter(article_num_of_views__gt=100).order_by('-article_num_of_views')[:4]
         art_category = kwargs['object'].article_category
         context['related_articles'] = Article.objects.filter(article_category=art_category).order_by('-article_num_of_views')[:8]
+        context['form'] = CommentForm()
+        context['comments_on_article']=Comment.objects.filter(comment_on_article=kwargs['object'].id)
+        context['categories'] = Article.objects.values("article_category").distinct()
         return context
 
 
 # Custom class based view for searching any matching text in Article table
 class SearchView(View):
-
+    paginated_by = 5
     # overriding post method to accept request.POST and work with its content
     def post(self, request):
         try:
@@ -76,8 +80,7 @@ class SearchSuccessView(View):
             # (OR: ('article_category__icontains', 'str_text_here'), ('article_name__icontains', 'str_text_here'))
             # (OR: ('article_category__icontains', 'str_text_here'), ('article_name__icontains', 'str_text_here'), ('article_text__icontains', 'str_text_here'))
             qs = qs | query
-            print(qs)
-        
+
         # getting result filtering by qs (querysets) that have been created above
         search_res = Article.objects.filter(qs)
         return render(request, "newsapp/search.html", {"search_res":search_res,"empty_res":"There is no article"} )
@@ -88,6 +91,7 @@ class ArchiveView(ListView):
     template_name = 'newsapp/archive.html'
     context_object_name = "archive_articles"
     queryset = Article.objects.all()[:100] # 2235
+    paginate_by = 10
 
 # Generic CBV for Contacts page
 class ContactsView(TemplateView):
@@ -107,3 +111,24 @@ class registerView(CreateView):
     form_class = CustomUserForm
     success_url = reverse_lazy('login')
     template_name = 'newsapp/registration.html'
+
+# Generic CBV for leaving comments on Article
+class LeaveCommentView(View):
+    
+    def post(self, request):
+        if request.method == 'POST':
+            comment_on_article = request.POST.get('comment_on_article')
+            new_comment=Comment(comment_text=request.POST.get('comment_text'), 
+                                comment_owner=CustomUser.objects.get(id=request.user.id),
+                                comment_on_article=Article.objects.get(id=comment_on_article))
+            new_comment.save()
+            return redirect("newsapp:get_article_by_id", pk=request.POST.get('comment_on_article'))
+
+class CommentLikeView(View):
+    def post(self, request):
+        if request.method == 'POST':
+            comment_rate = request.POST.get('comment_rate')
+            comment_obj = Comment.objects.get(id=request.POST.get('comment_id'))
+            comment_obj.rate_comment(float(comment_rate))
+            comment_obj.save()
+            return redirect("newsapp:get_article_by_id", pk=request.POST.get('article_id'))

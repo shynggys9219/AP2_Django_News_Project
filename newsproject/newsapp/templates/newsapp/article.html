@@ -3,7 +3,7 @@
   {{ article.article_name }}
 {% endblock %}
 {%load static%}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% block main_content %}
 <!-- Breadcrumb Start -->
 <div class="breadcrumb-wrap">
@@ -38,41 +38,35 @@
                   </div>
               </div>
               <div class="sn-related">
-                  <h2>Related News</h2>
-                  <div class="row sn-slider">
-                      <div class="col-md-4">
-                          <div class="sn-img">
-                              <img src="img/news-350x223-1.jpg" />
-                              <div class="sn-title">
-                                  <a href="">Interdum et fames ac ante</a>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="sn-img">
-                              <img src="img/news-350x223-2.jpg" />
-                              <div class="sn-title">
-                                  <a href="">Interdum et fames ac ante</a>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="sn-img">
-                              <img src="img/news-350x223-3.jpg" />
-                              <div class="sn-title">
-                                  <a href="">Interdum et fames ac ante</a>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="sn-img">
-                              <img src="img/news-350x223-4.jpg" />
-                              <div class="sn-title">
-                                  <a href="">Interdum et fames ac ante</a>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
+                  <h2>Commentaries Section:</h2>
+                  <h3>Previous comments:</h3>
+                    {% if comments_on_article %}
+                        {% for comment in comments_on_article %}
+                        <ul>
+                            <li><b>*{{comment.comment_owner}} left this on {{comment.comment_date}}: *</b></li>
+                            <p>{{comment.comment_text}} ({{comment.comment_rating}} people liked this comment)</p>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'newsapp:like_comment' %}" method="post" id="rateForm">
+                                {% csrf_token %}
+                                Like this comment: 
+                                <input type="radio" name="comment_rate" value="1" onclick="this.form.submit()" class="fa fa-heart">
+                                <input type="hidden" name="comment_id" value="{{comment.id}}">
+                                <input type="hidden" name="article_id" value="{{article.id}}">
+                            </form>
+                            {%endif%}
+
+                        </ul> 
+                        {%endfor%}
+                    {%endif%}
+                    {% if user.is_authenticated %}
+                  <form action="{% url 'newsapp:leave_comment' %}" method="post">
+                      {% csrf_token %}
+                      <h3>Share your thougths:</h3> 
+                        <input type="hidden" value="{{article.id}}" name="{{form.comment_on_article.name}}">
+                      <textarea name="{{form.comment_text.name}}" cols="80%" rows="5%" required></textarea>
+                    <input type="submit" value="Send">
+                </form>
+                    {%endif%}
               </div>
               {% else %}
               <p>No such article with id </p>
@@ -87,7 +81,7 @@
                       <div class="news-list">
                         
                         {%for article in related_articles%}
-                        {% if forloop.counter < 9 %}
+                        {% if forloop.counter < 5 %}
                           <div class="nl-item">
                               <div class="nl-img">
                                   <img src="{% static 'newsapp/img/news-main-page.jpg' %}" />
@@ -100,14 +94,7 @@
                           {%endfor%}
                           {%endif%}
                       </div>
-                  </div>
-                  
-                  <div class="sidebar-widget">
-                      <div class="image">
-                          <a href="https://htmlcodex.com"><img src="img/ads-2.jpg" alt="Image"></a>
-                      </div>
-                  </div>
-                  
+                  </div>                  
                   <div class="sidebar-widget">
                       <div class="tab-news">
                           <ul class="nav nav-pills nav-justified">
@@ -120,7 +107,7 @@
                           </ul>
 
                           <div class="tab-content">
-                            <div id="popular" class="container tab-pane fade">
+                            <div id="popular" class="container tab-pane active">
                                 {%if popular_articles%}
                                 {%for article in popular_articles%}
                                 {% if forloop.counter < 4 %}
@@ -156,45 +143,35 @@
                         </div>
                       </div>
                   </div>
-                  
-                  <div class="sidebar-widget">
-                      <div class="image">
-                          <a href="https://htmlcodex.com"><img src="img/ads-2.jpg" alt="Image"></a>
-                      </div>
-                  </div>
 
                   <div class="sidebar-widget">
-                      <h2 class="sw-title">News Category</h2>
+                      <h2 class="sw-title">News Categories</h2>
+                      {% if categories %}
                       <div class="category">
+                          {% for cat in categories%}
                           <ul>
-                              <li><a href="">National</a><span>(98)</span></li>
-                              <li><a href="">International</a><span>(87)</span></li>
-                              <li><a href="">Economics</a><span>(76)</span></li>
-                              <li><a href="">Politics</a><span>(65)</span></li>
-                              <li><a href="">Lifestyle</a><span>(54)</span></li>
-                              <li><a href="">Technology</a><span>(43)</span></li>
-                              <li><a href="">Trades</a><span>(32)</span></li>
+                              <li><a href="">{{cat.article_category|title}}</a><span></span></li>
                           </ul>
+                          {%endfor%}
                       </div>
+                      {%endif%}
                   </div>
 
-                  <div class="sidebar-widget">
-                      <div class="image">
-                          <a href="https://htmlcodex.com"><img src="img/ads-2.jpg" alt="Image"></a>
-                      </div>
-                  </div>
+                <div class="sidebar-widget">
+                    <div class="image">
+                        <a href="https://github.com/shynggys9219/AP2_Django_News_Project"><img src="{% static 'newsapp/img/ad.gif' %}" alt="Image"></a>
+                    </div>
+                </div>
                   
                   <div class="sidebar-widget">
                       <h2 class="sw-title">Tags Cloud</h2>
+                      {% if categories %}
                       <div class="tags">
-                          <a href="">National</a>
-                          <a href="">International</a>
-                          <a href="">Economics</a>
-                          <a href="">Politics</a>
-                          <a href="">Lifestyle</a>
-                          <a href="">Technology</a>
-                          <a href="">Trades</a>
+                        {% for cat in categories%}
+                          <a href="">{{cat.article_category|title}}</a>
+                        {%endfor%}
                       </div>
+                      {% endif %}
                   </div>
               </div>
           </div>

@@ -1,3 +1,4 @@
+from distutils.dep_util import newer_pairwise
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -92,8 +93,8 @@ class Comment(models.Model):
 
     # returning comment text and its owner when called
     def __str__(self) -> str:
-        return " ".join((self.comment_text, self.comment_owner))
+        return " ".join((str(self.id), self.comment_on_article.article_name))
 
     # TO-DO
     def rate_comment(self, newrate):
-        pass
+        self.comment_rating += newrate

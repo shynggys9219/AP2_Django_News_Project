@@ -32,6 +32,12 @@ urlpatterns = [
     # profile changing page url
     path('profile/change/', ProfileChangeView.as_view(), name='profile_change'),
 
+    # leave commentary 
+    path('articles/article/leavecomment/', LeaveCommentView.as_view(), name='leave_comment'),
+
+    # like commentary 
+    path('articles/article/like/', CommentLikeView.as_view(), name='like_comment'),
+
 
     # AUTH PART
     # localhost:8000/login
