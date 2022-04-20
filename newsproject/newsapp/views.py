@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .models import *
@@ -31,8 +32,11 @@ class ArticleDetailView(DetailView):
     model = Article
     template_name = "newsapp/article.html"
     form_class = CommentForm
-
+    
     def get_context_data(self, **kwargs):
+        article = Article.objects.get(pk=kwargs['object'].id)
+        article.increase_view_num()
+        article.save()
         context = super().get_context_data(**kwargs)
         context["latest_articles"] = Article.objects.order_by('-article_date')
         context['popular_articles'] = Article.objects.filter(article_num_of_views__gt=100).order_by('-article_num_of_views')[:4]
@@ -42,6 +46,15 @@ class ArticleDetailView(DetailView):
         context['comments_on_article']=Comment.objects.filter(comment_on_article=kwargs['object'].id)
         context['categories'] = Article.objects.values("article_category").distinct()
         return context
+
+
+    def post(self, request):
+        if request.method == 'POST':
+            article_rate = request.POST.get('article_rate')
+            article = Article.objects.get(id=request.POST.get('article_id'))
+            article.article_rate(float(article_rate))
+            article.save()
+            return redirect("newsapp:get_article_by_id", pk=request.POST.get('article_id'))
 
 
 # Custom class based view for searching any matching text in Article table

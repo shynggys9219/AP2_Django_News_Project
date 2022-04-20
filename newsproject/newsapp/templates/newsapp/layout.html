@@ -70,7 +70,7 @@
                         <div class="b-search">
                             <form class="" action="{%url 'newsapp:search_article_by_text' %}" method="post">
                                 {% csrf_token %}
-                                <input type="text" name="search_field" value="" method='POST' placeholder="Search here" >
+                                <input type="text" name="search_field" value="" method='POST' placeholder="Search here" required>
                                 <!-- <input type="submit" name="Search" value="Search"> -->
 
                             </form>
@@ -94,17 +94,13 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
                             <a href="{% url 'newsapp:index' %}" class="nav-item nav-link active">Home</a>
-                            <!-- <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item">Sub Item 1</a>
-                                    <a href="#" class="dropdown-item">Sub Item 2</a>
-                                </div>
-                            </div> -->
                             <a href="{% url 'newsapp:contacts' %}" class="nav-item nav-link">Contacts</a>
                             <a href="{% url 'newsapp:archive' %}" class="nav-item nav-link">Archive</a>
                             {% if user.is_authenticated %}
                             <a href="{% url 'newsapp:profile' %}" class="nav-item nav-link">{{user.username}}</a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'admin:index' %}" class="nav-item nav-link">Manage</a>
+                            {%endif%}
                             <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                             {% else %}
                             <a href="{% url 'login' %}" class="nav-item nav-link">Sign In</a>

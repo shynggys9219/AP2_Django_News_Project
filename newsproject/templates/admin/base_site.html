@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+
+{% block title %}AITU NEWS ADMINISTRATION | {{ site_title|default:_('AITU NEWS ADMINISTRATION') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">AITU NEWS ADMINISTRATION</a></h1>
+{% endblock %}
+
+{% block nav-global %}Here Will be Link to API Root{% endblock %}

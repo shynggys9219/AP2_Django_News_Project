@@ -38,6 +38,9 @@ urlpatterns = [
     # like commentary 
     path('articles/article/like/', CommentLikeView.as_view(), name='like_comment'),
 
+    # like article
+    path('articles/article/like_article/', ArticleDetailView.as_view(), name='like_article'),
+
 
     # AUTH PART
     # localhost:8000/login

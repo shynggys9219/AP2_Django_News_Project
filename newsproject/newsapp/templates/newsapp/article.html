@@ -32,13 +32,24 @@
                       <p> <b>Date: </b>{{article.article_date}}</p>
                       <p> <b>Rating:</b>  {{article.article_rating}}</p>
                       <p> <b>Views:</b>  {{article.article_num_of_views}} times</p>
+                      <p><b>Likes:</b> {{article.article_rating}} </p>
+                      <p><b>Written by:</b> {{article.article_editor.editor_name}} {{article.article_editor.editor_surname}}</p>
                       <p>{{article.article_text}}</p>
+                      {% if user.is_authenticated %}
+                            <form action="{% url 'newsapp:like_article' %}" method="post">
+                                {% csrf_token %}
+                                Do you like this article?: 
+                                <input type="radio" name="article_rate" value="1" onclick="this.form.submit()" class="fa fa-heart">
+                                <input type="hidden" name="article_id" value="{{article.id}}">
+                            </form>
+                            {%endif%}
                       
                       
                   </div>
               </div>
               <div class="sn-related">
                   <h2>Commentaries Section:</h2>
+                  
                   <h3>Previous comments:</h3>
                     {% if comments_on_article %}
                         {% for comment in comments_on_article %}

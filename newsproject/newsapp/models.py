@@ -18,6 +18,12 @@ class Editor(models.Model):
     def __str__(self) -> str:
         return " ".join((self.editor_name, self.editor_surname))
 
+    def get_name(self):
+        return self.editor_name
+    
+    def get_surname(self):
+        return self.editor_surname
+
 
 # Article model to store editors in database
 # Articles table in db.sqlite3
@@ -52,11 +58,17 @@ class Article(models.Model):
     # each time this article is opened
     # its number will be increased
     def increase_view_num(self):
-        self.article_num_of_views += self.article_num_of_views
+        self.article_num_of_views += 1
 
+    # number of likes of article
     def article_rate(self, newrate):
-        pass
+        self.article_rating += newrate
 
+    def get_article_rating(self):
+        return self.article_rating
+
+    def get_article_num_of_views(self):
+        return self.article_num_of_views
 
 # this is extension of exising class in django.contrib.auth.models.AbstractUser
 # it is slightly different from what we had before for superuser (admin)
