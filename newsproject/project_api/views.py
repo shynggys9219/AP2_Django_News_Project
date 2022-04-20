@@ -6,12 +6,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 # Create your views here.
 
 @api_view(['GET', 'POST'])
 @login_required(login_url='/login/')
+@staff_member_required
 def api_articles_list(request, format=None):
     """
     GETTING ALL ARTICLES ORDERED BY DATE
@@ -31,6 +33,7 @@ def api_articles_list(request, format=None):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @login_required(login_url='/login/')
+@staff_member_required
 def api_article_details(request, id, format=None):
 
     art = get_object_or_404(Article, pk=id)
