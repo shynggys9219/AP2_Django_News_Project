@@ -9,7 +9,7 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['article_text', 'article_name']
 
 class CustomUserAdmin(admin.ModelAdmin):
-    fields = ('username', 'password', 'is_staff', 'is_active')
+    fields = ('username', 'password', 'is_superuser','is_staff', 'is_active', 'user_avatar')
 
 
 # display Editor model for manipulations in admin panel

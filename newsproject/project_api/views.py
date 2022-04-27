@@ -1,54 +1,64 @@
-from os import stat
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from .serializers import *
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework import status, views
+from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 
-# Create your views here.
+# API: CBV for getting all articles
+class APIArticlesListView(views.APIView):
 
-@api_view(['GET', 'POST'])
-@login_required(login_url='/login/')
-@staff_member_required
-def api_articles_list(request, format=None):
-    """
-    GETTING ALL ARTICLES ORDERED BY DATE
-    """
-    if request.method == "GET":
-        articles = Article.objects.all()
+    # using method_decorator to wrap method in function decorator
+    # only registered users can retrieve articles list using api
+    @method_decorator(login_required(login_url='/login/'))
+    def get(self, request, format=None):
+
+        # getting articles ordered by date in DESC order
+        articles = Article.objects.order_by('-article_date')
+
+        # serialization of queryset to be 'dict'
         serializer = ArticleSerializer(articles, many=True)
 
+        # returning json like response
         return Response(serializer.data)
 
-    elif request.method == "POST":
-        serializer = ArticleSerializer(data=request.data)
+    # only authorized users, like staff members, can create articles
+    @method_decorator(staff_member_required)
+    def post(self, request, format=None):
+        serializer = ArticleSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED) # 201 is http status code for Created
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # 400 is http status code for Bad Request
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-@login_required(login_url='/login/')
-@staff_member_required
-def api_article_details(request, id, format=None):
 
-    art = get_object_or_404(Article, pk=id)
-    if request.method=='GET':
-        serializer = ArticleSerializer(art)
+# API: CBV for getting particular article & manipulating over it
+class APIArticleDetailsView(views.APIView):
+
+    @method_decorator(login_required(login_url='/login/'))
+    def get(self, request, pk, format=None):
+        serializer = ArticleSerializer(get_object_or_404(Article, pk=pk))
         return Response(serializer.data)
-    
-    elif request.method=='PUT':
-        serializer = ArticleSerializer(art, data=request.data, partial=True)
+
+    # only authorized users, like staff members, can update articles
+    @method_decorator(staff_member_required)
+    def put(self, request, pk, format=None):
+
+        # using get_object_or_404 shortcut to get article or to get PNF(404)error
+        # partial=True means you can update part of an article,
+        # skipping unnecessary updates/data providing
+        serializer = ArticleSerializer(get_object_or_404(Article, pk=pk),
+                                       data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method=='DELETE':
-        art.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT) # 204 is http status for No Content (deleted)
-
+    # only authorized users, like staff members, can delete article
+    @method_decorator(staff_member_required)
+    def delete(self, request, pk, format=None):
+        article = get_object_or_404(Article, pk=pk)
+        article.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

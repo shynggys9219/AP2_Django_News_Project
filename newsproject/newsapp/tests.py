@@ -29,7 +29,7 @@ class ArticleModelTests(TestCase):
     def test_article_rating_increase(self):
         art = Article.objects.get(pk=10001)
         art.article_rate(5.0)
-        self.assertTrue(art.article_rating==5.0, "New article rate is not 0.0 by default ")
+        self.assertTrue(art.article_rating==5, "New article rate is not 0.0 by default ")
 
 
     def test_article_num_of_view_increase(self):
@@ -74,7 +74,7 @@ class ArticleGetArtByIdViewTests(TestCase):
     def test_GetArtByIdView_status(self):
         article = Article.objects.get(id=10001)
         url = reverse("newsapp:get_article_by_id", args=(article.id,))
-        response = self.client.get(url)
+        response = self.client.get(url) #articles/article/10001
         self.assertEqual(response.status_code, 200, "url get_article_by_id status code test failed")
 
     def test_ArtArchiveView_context(self):
