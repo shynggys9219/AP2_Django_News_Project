@@ -1,64 +1,55 @@
-from django.shortcuts import get_object_or_404
 from .serializers import *
-from rest_framework import status, views
 from django.utils.decorators import method_decorator
-from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-
+from rest_framework.mixins import *
+from rest_framework.generics import *
 
 # API: CBV for getting all articles
-class APIArticlesListView(views.APIView):
+class APIArticlesListView(ListModelMixin, CreateModelMixin, GenericAPIView):
+
+    queryset = Article.objects.order_by('-article_date')
+    serializer_class = ArticleSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        # if an array of data was passed then set serializer to accept many
+        if isinstance(kwargs.get('data', {}), list):
+            kwargs['many']=True
+        return super(CreateModelMixin,self).get_serializer(*args, **kwargs)
 
     # using method_decorator to wrap method in function decorator
     # only registered users can retrieve articles list using api
     @method_decorator(login_required(login_url='/login/'))
-    def get(self, request, format=None):
-
-        # getting articles ordered by date in DESC order
-        articles = Article.objects.order_by('-article_date')
-
-        # serialization of queryset to be 'dict'
-        serializer = ArticleSerializer(articles, many=True)
-
-        # returning json like response
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
     # only authorized users, like staff members, can create articles
     @method_decorator(staff_member_required)
-    def post(self, request, format=None):
-        serializer = ArticleSerializer(data=request.data, many=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request,  *args, **kwargs):
+        kwargs['many']=True
+        return self.create(request, *args, **kwargs)
 
 
 # API: CBV for getting particular article & manipulating over it
-class APIArticleDetailsView(views.APIView):
+class APIArticleDetailsView(RetrieveAPIView, UpdateAPIView, DestroyAPIView, GenericAPIView):
+
+    queryset = Article.objects.order_by('-article_date')
+    serializer_class= ArticleSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial']=True
+        return super(UpdateModelMixin, self).get_serializer(*args, **kwargs)
 
     @method_decorator(login_required(login_url='/login/'))
-    def get(self, request, pk, format=None):
-        serializer = ArticleSerializer(get_object_or_404(Article, pk=pk))
-        return Response(serializer.data)
+    def get(self, request,*args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
     # only authorized users, like staff members, can update articles
     @method_decorator(staff_member_required)
-    def put(self, request, pk, format=None):
-
-        # using get_object_or_404 shortcut to get article or to get PNF(404)error
-        # partial=True means you can update part of an article,
-        # skipping unnecessary updates/data providing
-        serializer = ArticleSerializer(get_object_or_404(Article, pk=pk),
-                                       data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
     # only authorized users, like staff members, can delete article
     @method_decorator(staff_member_required)
-    def delete(self, request, pk, format=None):
-        article = get_object_or_404(Article, pk=pk)
-        article.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
