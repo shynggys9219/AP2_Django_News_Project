@@ -33,3 +33,84 @@ class APIArticleDetailsView(RetrieveUpdateDestroyAPIView):
     def get_serializer(self, *args, **kwargs):
         kwargs['partial']=True
         return super(RetrieveUpdateDestroyAPIView, self).get_serializer(*args, **kwargs)
+
+# API: CBV for getting all editors
+class APIEditorsListView(ListCreateAPIView):
+
+    queryset = Editor.objects.all()
+    serializer_class = EditorSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+
+    def get_serializer(self, *args, **kwargs):
+        # if an array of data was passed then set serializer to accept many
+        if isinstance(kwargs.get('data', {}), list):
+            kwargs['many']=True
+        return super(ListCreateAPIView,self).get_serializer(*args, **kwargs)
+
+
+# API: CBV for getting particular editor & manipulating over it
+# there are other options: 
+#      RetrieveDestroy-, RetrieveUpdate-, Retrieve-, Update-, DestroyAPIView
+class APIEditorDetailsView(RetrieveUpdateDestroyAPIView):
+
+    queryset = Comment.objects.all()
+    serializer_class= EditorSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial']=True
+        return super(RetrieveUpdateDestroyAPIView, self).get_serializer(*args, **kwargs)
+
+# API: CBV for getting all comments
+class APICommentsListView(ListCreateAPIView):
+
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+
+    def get_serializer(self, *args, **kwargs):
+        # if an array of data was passed then set serializer to accept many
+        if isinstance(kwargs.get('data', {}), list):
+            kwargs['many']=True
+        return super(ListCreateAPIView,self).get_serializer(*args, **kwargs)
+
+
+# API: CBV for getting particular comment & manipulating over it
+# there are other options: 
+#      RetrieveDestroy-, RetrieveUpdate-, Retrieve-, Update-, DestroyAPIView
+class APICommentDetailsView(RetrieveUpdateDestroyAPIView):
+
+    queryset = Comment.objects.all()
+    serializer_class= CommentSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial']=True
+        return super(RetrieveUpdateDestroyAPIView, self).get_serializer(*args, **kwargs)
+
+# API: CBV for getting all users
+class APICustomUsersListView(ListCreateAPIView):
+
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+
+    def get_serializer(self, *args, **kwargs):
+        # if an array of data was passed then set serializer to accept many
+        if isinstance(kwargs.get('data', {}), list):
+            kwargs['many']=True
+        return super(ListCreateAPIView,self).get_serializer(*args, **kwargs)
+
+
+# API: CBV for getting particular user & manipulating over it
+# there are other options: 
+#      RetrieveDestroy-, RetrieveUpdate-, Retrieve-, Update-, DestroyAPIView
+class APICustomUserDetailsView(RetrieveUpdateDestroyAPIView):
+
+    queryset = CustomUser.objects.all()
+    serializer_class= CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['partial']=True
+        return super(RetrieveUpdateDestroyAPIView, self).get_serializer(*args, **kwargs)
