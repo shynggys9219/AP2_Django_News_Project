@@ -1,13 +1,14 @@
+from cgitb import lookup
 from dataclasses import field
 from rest_framework import serializers
 from newsapp.models import *
 
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    article_editor = serializers.HyperlinkedRelatedField(many=True,
-        view_name='pro_api:api-editor-details', read_only=True)
+    # article_editor = serializers.HyperlinkedRelatedField(many=True,
+    #     view_name='pro_api:editor-detail', read_only=True, lookup_field='id')
 
-    url = serializers.HyperlinkedIdentityField(view_name='pro_api:api-article-details')
+    # url = serializers.HyperlinkedIdentityField(view_name='article-detail', lookup_field='id')
 
     class Meta:
         model = Article
@@ -21,7 +22,7 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='pro_api:api-user-details')
+    # url = serializers.HyperlinkedIdentityField(view_name='pro_api:user-detail')
     class Meta:
         model = CustomUser
         # fields = ['username', 'user_avatar', 'password']
@@ -29,13 +30,13 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CommentSerializer(serializers.HyperlinkedModelSerializer):
-    comment_on_article = serializers.HyperlinkedRelatedField(
-        view_name='pro_api:api-article-details', read_only=True)
+    # comment_on_article = serializers.HyperlinkedRelatedField(
+    #     view_name='pro_api:article-detail', read_only=True)
 
-    comment_owner = serializers.HyperlinkedRelatedField(
-        view_name='pro_api:api-user-details', read_only=True)
+    # comment_owner = serializers.HyperlinkedRelatedField(
+    #     view_name='pro_api:user-detail', read_only=True)
 
-    url = serializers.HyperlinkedIdentityField(view_name='pro_api:api-comment-details')
+    # url = serializers.HyperlinkedIdentityField(view_name='pro_api:comment-detail')
 
     class Meta:
         model = Comment
@@ -48,7 +49,7 @@ class CommentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EditorSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='pro_api:api-editor-details')
+    # url = serializers.HyperlinkedIdentityField(view_name='pro_api:editor-detail')
     class Meta:
         model = Editor
         fields = '__all__'
