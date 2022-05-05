@@ -4,8 +4,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework.mixins import *
 from rest_framework.generics import *
-from rest_framework import permissions # new import
-from .permissions import IsStaffOrNot
+from rest_framework import response, reverse 
+from rest_framework.views import APIView # used for APIRoot
+from rest_framework import permissions # used to set permissions on api access
+from .permissions import IsStaffOrNot # custom permission for accessing api
+
+
+# API Root 127.0.0.1:{Port_value_here or 8000 by default}/api
+class APIRoot(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrNot]
+    def get(self, request, format=None):
+        return response.Response({
+            'artiles-list':reverse.reverse('pro_api:api-articles-list', request=request, format=format),
+            'users-list':reverse.reverse('pro_api:api-users-list', request=request, format=format),
+            'editors-list':reverse.reverse('pro_api:api-editors-list', request=request, format=format),
+            'comments-list':reverse.reverse('pro_api:api-comments-list', request=request, format=format)
+        })
+
 
 # API: CBV for getting all articles
 class APIArticlesListView(ListCreateAPIView):

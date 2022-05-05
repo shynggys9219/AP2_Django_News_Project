@@ -5,13 +5,17 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 app_name = 'pro_api'
 urlpatterns = [
+
+    # Entrypoint/Root (Endpoint) for api
+    path('', APIRoot.as_view(), name='api-root'),
+
     # getting all articles list
     path('articles/all/', APIArticlesListView.as_view(),
          name='api-articles-list'),
 
     # getting article details
     path('articles/article/<int:pk>/',
-         APIArticleDetailsView.as_view(), name='api-article-detail'),
+         APIArticleDetailsView.as_view(), name='api-article-details'),
 
     # getting all editors list
     path('editors/all/', APIEditorsListView.as_view(),
